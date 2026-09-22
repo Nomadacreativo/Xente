@@ -1,0 +1,6 @@
+{
+  "name": "Festival de la Cajeta Celaya 2026 - Tour Virtual 3D",
+  "description": "Vuelo inmersivo y recorrido virtual interactivo del Festival de la Cajeta Celaya 2026 y encarpado monumental por Xente Soluciones Integrales.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

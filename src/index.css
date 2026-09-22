@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-space: 'Space Grotesk', -apple-system, sans-serif;
+    --font-manrope: 'Manrope', -apple-system, sans-serif;
+    --font-audiowide: 'Audiowide', cursive, sans-serif;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-manrope);
+    background-color: #111319;
+    color: #e2e2eb;
+    overscroll-behavior: none;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0c0e14;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #282a30;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #45464f;
+  }
+}
+
+.font-space {
+  font-family: var(--font-space);
+}
+
+.font-manrope {
+  font-family: var(--font-manrope);
+}
+
+.font-audiowide {
+  font-family: var(--font-audiowide);
+}
+
+.perspective-stage {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.camera-layer {
+  will-change: transform, opacity, filter;
+  transform-origin: 50% 55%;
+}
+
+.custom-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffb4ab;
+  box-shadow: 0 0 12px rgba(255, 180, 171, 0.9);
+  cursor: pointer;
+  border: 2px solid #111319;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffb4ab;
+  box-shadow: 0 0 12px rgba(255, 180, 171, 0.9);
+  cursor: pointer;
+  border: 2px solid #111319;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.08); opacity: 0.6; }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
