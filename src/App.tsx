@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Header } from './components/Header';
 import { SpatialTour } from './components/SpatialTour';
 import { ScreensGallery } from './components/ScreensGallery';
+import { GoogleMapView } from './components/GoogleMapView';
 import { TechnicalSpecsModal } from './components/TechnicalSpecsModal';
 import { ArtisanGuide } from './components/ArtisanGuide';
 import { Footer } from './components/Footer';
 
 export default function App() {
   const [currentStageIndex, setCurrentStageIndex] = useState<number>(0);
-  const [activeScreenMode, setActiveScreenMode] = useState<'tour' | 'gallery' | 'specs' | 'artisan'>('tour');
+  const [activeScreenMode, setActiveScreenMode] = useState<'tour' | 'gallery' | 'map' | 'specs' | 'artisan'>('tour');
   const [isSpecsModalOpen, setIsSpecsModalOpen] = useState<boolean>(false);
 
   return (
@@ -35,12 +36,22 @@ export default function App() {
             currentStageIndex={currentStageIndex}
             onStageChange={(idx) => setCurrentStageIndex(idx)}
             onOpenSpecsModal={() => setIsSpecsModalOpen(true)}
+            onOpenMapView={() => setActiveScreenMode('map')}
           />
         )}
 
         {activeScreenMode === 'gallery' && (
           <ScreensGallery
             onSelectScreenForTour={(stageIdx) => {
+              setCurrentStageIndex(stageIdx);
+              setActiveScreenMode('tour');
+            }}
+          />
+        )}
+
+        {activeScreenMode === 'map' && (
+          <GoogleMapView
+            onGoToTourStage={(stageIdx) => {
               setCurrentStageIndex(stageIdx);
               setActiveScreenMode('tour');
             }}

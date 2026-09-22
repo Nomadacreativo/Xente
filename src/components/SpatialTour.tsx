@@ -6,12 +6,14 @@ interface SpatialTourProps {
   currentStageIndex: number;
   onStageChange: (index: number) => void;
   onOpenSpecsModal: () => void;
+  onOpenMapView: () => void;
 }
 
 export const SpatialTour: React.FC<SpatialTourProps> = ({
   currentStageIndex,
   onStageChange,
   onOpenSpecsModal,
+  onOpenMapView,
 }) => {
   // Continuous flight progress from 0.0 (high aerial) to 1.0 (deep inside festival)
   const [flightProgress, setFlightProgress] = useState<number>(0.0);
@@ -491,23 +493,23 @@ export const SpatialTour: React.FC<SpatialTourProps> = ({
         </div>
 
         {/* Center-Bottom Floating Tour Progression Hub & Continuous Inset Slider */}
-        <div className="flex flex-col items-center gap-2 w-full pointer-events-auto pb-1 max-w-2xl mx-auto">
+        <div className="flex flex-col items-center gap-2 w-full pointer-events-auto pb-1 max-w-xl mx-auto">
           {/* Continuous Progression Drag Bar & Scroll Guide */}
-          <div className="w-full flex flex-col gap-2 px-4 sm:px-6 py-3 rounded-2xl bg-[#191b22]/95 border border-[#45464f]/40 backdrop-blur-2xl shadow-2xl">
+          <div className="w-full flex flex-col gap-2 px-4 sm:px-6 py-2.5 rounded-2xl bg-[#191b22]/95 border border-[#45464f]/40 backdrop-blur-2xl shadow-2xl">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <div className="w-5 h-8 rounded-full bg-[#33343b] flex items-start justify-center p-1 border border-[#45464f]/30">
-                  <div className="w-1 h-2 bg-[#ffb4ab] rounded-full animate-bounce"></div>
+                <div className="w-4 h-7 rounded-full bg-[#33343b] flex items-start justify-center p-0.5 border border-[#45464f]/30">
+                  <div className="w-1 h-1.5 bg-[#ffb4ab] rounded-full animate-bounce"></div>
                 </div>
-                <span className="font-space text-[11px] tracking-wider uppercase text-[#c6c5d0] font-bold hidden sm:inline">
+                <span className="font-space text-[10px] sm:text-[11px] tracking-wider uppercase text-[#c6c5d0] font-bold hidden sm:inline">
                   Gira la Rueda / Haz Scroll o Arrastra
                 </span>
-                <span className="font-space text-[11px] tracking-wider uppercase text-[#c6c5d0] font-bold sm:hidden">
+                <span className="font-space text-[10px] tracking-wider uppercase text-[#c6c5d0] font-bold sm:hidden">
                   Desliza o Arrastra
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <span className="font-mono text-[#b8c4fb] font-bold text-xs">
                   Inmersión: {percentVal}%
                 </span>
@@ -558,12 +560,12 @@ export const SpatialTour: React.FC<SpatialTourProps> = ({
           </div>
 
           {/* Timeline Segment Bar Dock */}
-          <div className="w-full flex items-center justify-between gap-1 p-1.5 rounded-2xl bg-[#0c0e14]/90 border border-[#45464f]/40 backdrop-blur-2xl shadow-2xl">
+          <div className="w-full flex items-center justify-between gap-1 p-1 rounded-2xl bg-[#0c0e14]/90 border border-[#45464f]/40 backdrop-blur-2xl shadow-2xl">
             {STAGES.map((stg, idx) => (
               <button
                 key={stg.id}
                 onClick={() => jumpToStage(idx)}
-                className={`flex-1 py-2 px-1 text-center rounded-xl font-space text-xs transition-all ${
+                className={`flex-1 py-1.5 sm:py-2 px-1 text-center rounded-xl font-space text-[11px] sm:text-xs transition-all ${
                   currentStageIndex === idx
                     ? 'bg-[#1e2b58] text-[#e2e2eb] font-bold shadow-md border border-[#b8c4fb]/30'
                     : 'text-[#c6c5d0] hover:text-[#e2e2eb] hover:bg-[#282a30]'
@@ -576,9 +578,9 @@ export const SpatialTour: React.FC<SpatialTourProps> = ({
         </div>
       </div>
 
-      {/* Floating Left: Compass Widget */}
-      <aside className="fixed top-24 left-4 pointer-events-auto z-40 hidden md:flex flex-col gap-1 bg-[#191b22]/90 backdrop-blur-xl p-2.5 rounded-2xl border border-[#45464f]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-        <div className="w-12 h-12 rounded-full border border-[#45464f]/40 flex items-center justify-center relative bg-[#0c0e14]/80">
+      {/* Floating Left: Compass Widget & Map Launcher */}
+      <aside className="fixed top-24 left-4 pointer-events-auto z-40 hidden md:flex flex-col gap-2 bg-[#191b22]/90 backdrop-blur-xl p-2.5 rounded-2xl border border-[#45464f]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+        <div className="w-12 h-12 rounded-full border border-[#45464f]/40 flex items-center justify-center relative bg-[#0c0e14]/80 mx-auto">
           <div
             className="w-1.5 h-1.5 rounded-full bg-[#ce0217] transition-transform duration-150"
             style={{ transform: `rotate(${compassAngle}deg)` }}
@@ -589,16 +591,28 @@ export const SpatialTour: React.FC<SpatialTourProps> = ({
         <div className="text-center font-space text-[9px] text-[#c6c5d0] uppercase tracking-wider">
           Azim {compassAngle}°
         </div>
+        <div className="h-px w-full bg-[#45464f]/30"></div>
+        <button
+          onClick={() => {
+            onOpenMapView();
+            soundFx.playClick(750);
+          }}
+          className="flex items-center justify-center gap-1 py-1 px-1.5 rounded-lg bg-[#1e2b58]/80 hover:bg-[#1e2b58] text-[#b8c4fb] text-[10px] font-space font-semibold transition-all border border-[#b8c4fb]/30"
+          title="Ver mapa GPS en Google Maps"
+        >
+          <span className="material-symbols-outlined text-[14px]">map</span>
+          <span>GPS</span>
+        </button>
       </aside>
 
       {/* Floating Bottom-Left: Interactive Time-of-Day Atmosphere Control */}
-      <aside className="fixed bottom-6 left-4 pointer-events-auto z-40 hidden lg:flex flex-col gap-1.5 bg-[#191b22]/90 backdrop-blur-xl p-3 rounded-2xl border border-[#45464f]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] w-64">
+      <aside className="fixed bottom-6 left-4 pointer-events-auto z-30 hidden xl:flex flex-col gap-1.5 bg-[#191b22]/90 backdrop-blur-xl p-3 rounded-2xl border border-[#45464f]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] w-56">
         <div className="flex items-center justify-between text-[#c6c5d0] px-0.5">
           <span className="font-space text-xs uppercase tracking-wider text-[#b8c4fb] font-semibold">
-            Línea de Tiempo
+            Atmósfera
           </span>
           <span className="font-space text-xs text-[#ffdcd8]">
-            {timeOfDay < 0.4 ? 'Pleno Sol • 13:00' : timeOfDay < 0.75 ? 'Puesta de Sol • 18:30' : 'Noche de Fiesta • 21:30'}
+            {timeOfDay < 0.4 ? 'Sol • 13:00' : timeOfDay < 0.75 ? 'Atardecer • 18:30' : 'Noche • 21:30'}
           </span>
         </div>
 
@@ -616,13 +630,13 @@ export const SpatialTour: React.FC<SpatialTourProps> = ({
         />
 
         <div className="flex justify-between font-space text-[9px] text-[#c6c5d0] px-0.5">
-          <span>10:00 AM Apertura</span>
-          <span>02:00 AM Cierre</span>
+          <span>10:00 AM</span>
+          <span>02:00 AM</span>
         </div>
       </aside>
 
       {/* Floating Bottom-Right: Camera Navigation Controls Dock */}
-      <aside className="fixed bottom-6 right-4 pointer-events-auto z-40 flex flex-col gap-2">
+      <aside className="fixed bottom-6 right-4 pointer-events-auto z-30 flex flex-col gap-2">
         <div className="flex flex-col rounded-2xl bg-[#191b22]/90 backdrop-blur-xl border border-[#45464f]/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
           <button
             onClick={handleZoomIn}
@@ -661,91 +675,112 @@ export const SpatialTour: React.FC<SpatialTourProps> = ({
         </button>
       </aside>
 
-      {/* Slide-over Inspector Drawer Panel */}
-      <div
-        className={`absolute bottom-6 right-6 w-96 max-w-[calc(100vw-3rem)] rounded-2xl bg-[#191b22]/95 border border-[#45464f]/40 backdrop-blur-2xl p-5 shadow-[0_16px_48px_rgba(0,0,0,0.85)] z-40 transition-all duration-300 pointer-events-auto ${
-          isDrawerOpen ? 'translate-y-0 opacity-100' : 'translate-y-[120%] opacity-0 pointer-events-none'
+      {/* Slide-over Inspector Drawer: Docked Right Sheet (Zero Collision with Bottom HUD) */}
+      {/* Mobile Backdrop */}
+      {isDrawerOpen && (
+        <div
+          onClick={() => {
+            setIsDrawerOpen(false);
+            soundFx.playClick(400);
+          }}
+          className="fixed inset-0 top-20 bg-black/60 backdrop-blur-sm z-40 sm:hidden transition-opacity"
+        />
+      )}
+
+      <aside
+        className={`fixed top-20 right-0 bottom-0 w-full sm:w-[400px] bg-[#191b22]/98 border-l border-[#45464f]/40 backdrop-blur-2xl p-5 sm:p-6 shadow-[-20px_0_60px_rgba(0,0,0,0.85)] z-50 transition-transform duration-300 pointer-events-auto flex flex-col justify-between overflow-y-auto ${
+          isDrawerOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none'
         }`}
       >
-        <div className="flex items-center justify-between pb-3 border-b border-[#45464f]/30">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#ffb4ab] text-lg">architecture</span>
-            <span className="font-space text-base font-bold text-[#e2e2eb]">
-              {activeStage.modalTitle}
-            </span>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#45464f]/30">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#ffb4ab] text-lg">architecture</span>
+              <span className="font-space text-base font-bold text-[#e2e2eb]">
+                {activeStage.modalTitle}
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                setIsDrawerOpen(false);
+                soundFx.playClick();
+              }}
+              className="w-8 h-8 rounded-full bg-[#282a30] text-[#c6c5d0] hover:text-[#e2e2eb] hover:bg-[#33343b] flex items-center justify-center transition-colors"
+              title="Cerrar panel"
+            >
+              <span className="material-symbols-outlined text-sm">close</span>
+            </button>
           </div>
+
+          <p className="text-xs text-[#c6c5d0] leading-relaxed">
+            {activeStage.modalDesc}
+          </p>
+
+          {/* 4 Technical Badges Grid */}
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="p-3 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
+              <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
+                {activeStage.stat1.label}
+              </span>
+              <span className="font-space text-base font-bold text-[#b8c4fb] mt-0.5 block">
+                {activeStage.stat1.value}
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
+              <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
+                {activeStage.stat2.label}
+              </span>
+              <span className="font-space text-base font-bold text-[#ffb4ab] mt-0.5 block">
+                {activeStage.stat2.value}
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
+              <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
+                {activeStage.stat3.label}
+              </span>
+              <span className="font-space text-base font-bold text-[#e2e2eb] mt-0.5 block">
+                {activeStage.stat3.value}
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
+              <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
+                {activeStage.stat4.label}
+              </span>
+              <span className="font-space text-base font-bold text-[#b8c4fb] mt-0.5 block">
+                {activeStage.stat4.value}
+              </span>
+            </div>
+          </div>
+
+          {/* Key Engineering Details */}
+          <div className="space-y-1.5 pt-1">
+            <span className="text-[10px] text-[#c6c5d0] font-space uppercase font-bold tracking-wider">
+              Especificaciones de Montaje:
+            </span>
+            <ul className="text-xs text-[#c6c5d0] space-y-1.5">
+              {activeStage.details.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 bg-[#1e1f26]/60 p-2 rounded-lg border border-[#45464f]/20">
+                  <span className="text-[#ffb4ab] font-bold">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-[#45464f]/30 flex flex-col gap-2 mt-4">
           <button
             onClick={() => {
-              setIsDrawerOpen(false);
+              onOpenSpecsModal();
               soundFx.playClick();
             }}
-            className="w-7 h-7 rounded-full bg-[#282a30] text-[#c6c5d0] hover:text-[#e2e2eb] flex items-center justify-center transition-colors"
+            className="w-full py-2.5 px-3 rounded-xl bg-[#1e2b58] text-[#b8c4fb] hover:bg-[#212e5b] hover:text-[#ffffff] font-space text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 border border-[#b8c4fb]/40"
           >
-            <span className="material-symbols-outlined text-sm">close</span>
+            <span className="material-symbols-outlined text-[16px]">download</span>
+            <span>Descargar Memoria Técnica (.txt)</span>
           </button>
         </div>
-
-        <p className="text-xs text-[#c6c5d0] py-3 leading-relaxed">
-          {activeStage.modalDesc}
-        </p>
-
-        {/* 4 Technical Badges Grid */}
-        <div className="grid grid-cols-2 gap-2 pb-4">
-          <div className="p-2.5 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
-            <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
-              {activeStage.stat1.label}
-            </span>
-            <span className="font-space text-sm font-bold text-[#b8c4fb]">
-              {activeStage.stat1.value}
-            </span>
-          </div>
-          <div className="p-2.5 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
-            <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
-              {activeStage.stat2.label}
-            </span>
-            <span className="font-space text-sm font-bold text-[#ffb4ab]">
-              {activeStage.stat2.value}
-            </span>
-          </div>
-          <div className="p-2.5 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
-            <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
-              {activeStage.stat3.label}
-            </span>
-            <span className="font-space text-sm font-bold text-[#e2e2eb]">
-              {activeStage.stat3.value}
-            </span>
-          </div>
-          <div className="p-2.5 rounded-xl bg-[#1e1f26] border border-[#45464f]/30">
-            <span className="block font-space text-[10px] text-[#c6c5d0] uppercase">
-              {activeStage.stat4.label}
-            </span>
-            <span className="font-space text-sm font-bold text-[#b8c4fb]">
-              {activeStage.stat4.value}
-            </span>
-          </div>
-        </div>
-
-        {/* Bullet points of structural details */}
-        <ul className="text-[11px] text-[#c6c5d0] space-y-1 mb-4">
-          {activeStage.details.slice(0, 2).map((item, i) => (
-            <li key={i} className="flex items-start gap-1.5">
-              <span className="text-[#ffb4ab]">•</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-
-        <button
-          onClick={() => {
-            onOpenSpecsModal();
-            soundFx.playClick();
-          }}
-          className="w-full py-2.5 px-3 rounded-xl bg-[#1e2b58] text-[#b8c4fb] hover:bg-[#212e5b] hover:text-[#ffffff] font-space text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 border border-[#b8c4fb]/40"
-        >
-          <span className="material-symbols-outlined text-[16px]">download</span>
-          <span>Descargar Ficha Técnica Oficial</span>
-        </button>
-      </div>
+      </aside>
 
       {/* Help Modal Overlay */}
       {showHelp && (
